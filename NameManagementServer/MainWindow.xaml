@@ -1,0 +1,86 @@
+﻿<Window x:Class="NameManagementServer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NameManagementServer"
+        mc:Ignorable="d"
+        Title="NameManagement - Server" 
+        Height="400" Width="450"
+        MinWidth="350" MinHeight="300"
+        Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <!-- Custom TextBox style -->
+        <Style x:Key="TextBoxStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="Gray"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="60*"/>
+            <RowDefinition Height="20*"/>
+        </Grid.RowDefinitions>
+
+        <!-- IP and Port settings section -->
+        <!-- **************************** -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="40*" />
+               
+                <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="40*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- IP -->
+            <Label Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="IP:"/>
+            <TextBox x:Name="getIp" Text="127.0.0.1" Grid.Column="1" Margin="10" Height="30" 
+                     Style="{StaticResource TextBoxStyle}"
+                     PreviewTextInput="getIp_PreviewTextInput"/>
+
+            <!-- Port -->
+            <Label Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Port:"/>
+            <TextBox x:Name="getPort" Text="9000" Grid.Column="3" Margin="10" Height="30" Width="80" HorizontalAlignment="Left" 
+                     Style="{StaticResource TextBoxStyle}"
+                     PreviewTextInput="getPort_PreviewTextInput"/>
+            
+        </Grid>
+
+        <!-- Info panel section -->
+        <!-- ****************** -->
+        <Grid Grid.Row="1">
+            <Border BorderBrush="Black" BorderThickness="0.3" Margin="10" >
+                <ScrollViewer x:Name="scrollView" Margin="1">
+                    <TextBlock x:Name="panel"/>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <!-- Connection controller section -->
+        <!-- ***************************** -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60*"/>
+                <ColumnDefinition Width="30*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label x:Name="lblGetServerStatus" Grid.Column="0" Content="Server is offiline" HorizontalAlignment="Center" 
+                   VerticalAlignment="Center" 
+                   FontSize="14"
+                   FontWeight="Bold"
+                   Foreground="Red"/>
+                    
+            <!-- Start Server button -->
+            <Button x:Name="btnSrvStartStop" Grid.Column="1" Content="Start" Margin="10" Click="btnSrvStartStop_Click"/>
+        </Grid>
+    </Grid>
+
+
+</Window>
