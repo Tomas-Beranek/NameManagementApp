@@ -39,13 +39,13 @@
             </Grid.ColumnDefinitions>
             <!-- IP -->
             <Label Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="IP:"/>
-            <TextBox x:Name="getIp" Grid.Column="1" Margin="10" Height="30" 
+            <TextBox x:Name="getIp" Grid.Column="1" Margin="10" Height="30" Text="127.0.0.1"
                      Style="{StaticResource TextBoxStyle}"
                      PreviewTextInput="getIp_PreviewTextInput"/>
 
             <!-- Port -->
             <Label Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Port:"/>
-            <TextBox x:Name="getPort" Grid.Column="3" Margin="10" Height="30" Width="80" HorizontalAlignment="Left" 
+            <TextBox x:Name="getPort" Grid.Column="3" Margin="10" Height="30" Width="80" HorizontalAlignment="Left" Text="9000"
                      Style="{StaticResource TextBoxStyle}"
                      PreviewTextInput="getPort_PreviewTextInput"/>
             
@@ -55,8 +55,14 @@
         <!-- ****************** -->
         <Grid Grid.Row="1">
             <!-- CSV edit -->
-            <DataGrid Margin="10"/>
-      
+            <DataGrid x:Name="dataGrid" ItemsSource="{Binding Path=Records}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding ID}" />
+                    <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" />
+                    <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" />
+                </DataGrid.Columns>
+            </DataGrid>
+
         </Grid>
 
         <!-- Connection controller section -->
