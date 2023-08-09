@@ -1,6 +1,6 @@
 # Klient-Server Aplikace pro Správu Seznamu Jmen
 
-Tento program byl vytvořen jakožto v rámcí příjmacího řízení. Jedná se o klient-server aplikace pro správu seznamu jmen pomocí jazyka C#.
+Tento program byl vytvořen v rámcí příjmacího řízení. Jedná se o klient-server aplikace pro správu seznamu jmen pomocí jazyka C#.
 
 ## Server
 
