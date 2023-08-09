@@ -56,4 +56,4 @@ Tento program byl vytvořen v rámci příjmacího řízení. Jedná se o klient
 2. Spusťte klientovou aplikaci.
 3. Zadejte IP adresu a port serveru a připojte se k němu.
 4. Vytvářejte, editujte nebo mažte záznamy v seznamu jmen.
-5. Mazání záznamu se provede přes kontextové "delete" menu
+5. Mazání záznamu se provede přes kontextové "delete" menu(pravý klik myši)
