@@ -1,9 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Klient-Server Aplikace pro Správu Seznamu Jmen</title>
-</head>
-<body>
     <h1>Případová studie: Klient-Server Aplikace pro Správu Seznamu Jmen v C#</h1>
 
     <p>Tato případová studie popisuje tvorbu klient-server aplikace v jazyce C#, která umožní správu seznamu jmen. Aplikace bude sestávat z dvou částí: serveru a klienta. Server bude schopen přijímat připojení od klientů, ukládat seznam jmen do souboru ve formátu CSV a zajišťovat simultánní obsluhu několika klientů. Klient bude mít jednoduché uživatelské rozhraní, které umožní vytvořit nový záznam, smazat existující záznam nebo upravit hodnoty jmen a příjmení.</p>
