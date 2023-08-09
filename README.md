@@ -1,70 +1,62 @@
-    <h1>Klient-Server Aplikace pro Správu Seznamu Jmen v C#</h1>
+# Klient-Server Aplikace pro Správu Seznamu Jmen
 
-    <p>Tato případová studie popisuje tvorbu klient-server aplikace v jazyce C#, která umožní správu seznamu jmen. Aplikace bude sestávat z dvou částí: serveru a klienta. Server bude schopen přijímat připojení od klientů, ukládat seznam jmen do souboru ve formátu CSV a zajišťovat simultánní obsluhu několika klientů. Klient bude mít jednoduché uživatelské rozhraní, které umožní vytvořit nový záznam, smazat existující záznam nebo upravit hodnoty jmen a příjmení.</p>
+Tato případová studie popisuje vytvoření klient-server aplikace pro správu seznamu jmen pomocí jazyka C#.
 
-    <h2>Server</h2>
-    <h3>Funkce Serveru:</h3>
-    <ul>
-        <li>Připojování klientů na konfigurovatelné IP adrese a portu.</li>
-        <li>Ukládání seznamu jmen do souboru ve formátu CSV.</li>
-        <li>Podpora pro simultánní obsluhu více klientů.</li>
-        <li>Zajištění bezpečného ukládání dat při výpadku.</li>
-    </ul>
+## Server
 
-    <h3>Technické Detaily:</h3>
-    <ul>
-        <li>Jazyk: C#</li>
-        <li>.NET Framework: 4.8</li>
-        <li>Použití TCP/IP pro komunikaci mezi serverem a klienty.</li>
-    </ul>
+### Funkce Serveru:
 
-    <h2>Klient</h2>
-    <h3>Funkce Klienta:</h3>
-    <ul>
-        <li>Připojení k serveru na zadané IP adrese a portu.</li>
-        <li>Vytváření nových záznamů s automaticky generovaným unikátním ID.</li>
-        <li>Editace existujících záznamů (Jméno a Příjmení).</li>
-        <li>Mazání záznamů.</li>
-    </ul>
+- Umožňuje připojení klientů na konfigurovatelné IP adrese a portu.
+- Ukládá seznam jmen do souboru ve formátu CSV.
+- Podporuje obsluhu několika klientů zároveň.
+- Zajišťuje bezpečné ukládání dat i při výpadku.
 
-    <h3>Technické Detaily:</h3>
-    <ul>
-        <li>Jazyk: C#</li>
-        <li>.NET Framework: 4.8</li>
-        <li>Jednoduché uživatelské rozhraní pomocí WPF.</li>
-    </ul>
+### Technické Detaily:
 
-    <h2>Další Požadavky</h2>
-    <ul>
-        <li>Server musí zvládat obsluhu více klientů současně.</li>
-        <li>Data nesmí být ztracena při výpadku serveru.</li>
-        <li>Aplikace bude vyvíjena na .NET Framework 4.8.</li>
-    </ul>
+- Jazyk: C#
+- .NET Framework: 4.8
+- Použití TCP/IP pro komunikaci mezi serverem a klienty.
 
-    <h2>GitHub README</h2>
-    <h3>Instalace</h3>
-    <ol>
-        <li>Stáhněte si projektový kód ze zdroje (GitHub repository).</li>
-        <li>Otevřete projekt v Visual Studiu.</li>
-    </ol>
+## Klient
 
-    <h3>Konfigurace Serveru</h3>
-    <ol>
-        <li>Otevřete projekt serveru.</li>
-        <li>Upravte konfigurační soubor s IP adresou a portem serveru.</li>
-        <li>Spusťte serverovou aplikaci.</li>
-    </ol>
+### Funkce Klienta:
 
-    <h3>Použití Klienta</h3>
-    <ol>
-        <li>Otevřete projekt klienta.</li>
-        <li>Spusťte klientovou aplikaci.</li>
-        <li>Zadejte IP adresu a port serveru a připojte se k němu.</li>
-        <li>Vytvářejte, editujte nebo mažte záznamy v seznamu jmen.</li>
-    </ol>
+- Připojení k serveru na zadané IP adrese a portu.
+- Vytváření nových záznamů s automaticky generovaným unikátním ID.
+- Editace existujících záznamů (Jméno a Příjmení).
+- Mazání záznamů.
 
-    <h3>Dodatečné Informace</h3>
-    <ul>
-        <li>Pro instalaci a použití projektu je nutný .NET Framework 4.8.</li>
-        <li>Tento projekt je součástí případové studie pro tvorbu klient-server aplikace pro správu seznamu jmen v C#.</li>
-    </ul>
+### Technické Detaily:
+
+- Jazyk: C#
+- .NET Framework: 4.8
+- Uživatelské rozhraní vytvořené pomocí WPF.
+
+## Další Požadavky
+
+- Server zvládá obsluhu více klientů současně.
+- Data nejsou ztracena při výpadku serveru.
+- Aplikace je vyvíjena na .NET Framework 4.8.
+
+## Instalace
+
+1. Stáhněte si projektový kód ze zdroje (GitHub repository).
+2. Otevřete projekt v Visual Studiu.
+
+## Konfigurace Serveru
+
+1. Otevřete projekt serverové aplikace.
+2. Upravte konfigurační soubor s IP adresou a portem serveru.
+3. Spusťte serverovou aplikaci.
+
+## Použití Klienta
+
+1. Otevřete projekt klientové aplikace.
+2. Spusťte klientovou aplikaci.
+3. Zadejte IP adresu a port serveru a připojte se k němu.
+4. Vytvářejte, editujte nebo mažte záznamy v seznamu jmen.
+
+## Dodatečné Informace
+
+- Pro instalaci a použití projektu je vyžadován .NET Framework 4.8.
+- Tento projekt je součástí případové studie pro tvorbu klient-server aplikace pro správu seznamu jmen v C#.
