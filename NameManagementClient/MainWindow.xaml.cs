@@ -1,80 +1,37 @@
 ﻿using NameManagementClient;
+using Newtonsoft.Json;
 using SimpleTCP;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace NameManagementServer
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
+        private SimpleTcpClient tcpClient;
+        private List<Record> dataList = new List<Record>();
+
         private readonly TimeSpan serverTimeout = TimeSpan.FromSeconds(10);
         private readonly System.Timers.Timer ServerRespondTimer = new System.Timers.Timer();
-        private TcpClientManager tcpClientManager;
-        
 
         public MainWindow()
         {
             InitializeComponent();
-            tcpClientManager = new TcpClientManager();
-            tcpClientManager.DataReceived += TcpClientManager_DataReceived;
-        }
-        private void ServerRespondTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            // The server has not sent a ping message within the timeout period.
-            // Assume that the server has gone offline.
-            Dispatcher.Invoke(() => 
-            { 
-                lblGetConnectStatus.Content = "Server has gone offline";
-                btnConnectToSrv.Content = "Connect";
-            });
-            tcpClientManager.Disconnect();
-            ServerRespondTimer.Stop();
+            tcpClient = new SimpleTcpClient();
+            tcpClient.DataReceived += TcpClient_DataReceived;
+            ServerRespondTimer.Interval = serverTimeout.TotalMilliseconds;
+            ServerRespondTimer.Elapsed += ServerRespondTimer_Elapsed;
         }
 
-        private void getIp_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            TextBox textBox = (TextBox)sender;
-            string newText = textBox.Text + e.Text;
-
-            // Allow only digits and dots with the desired format (IP address format)
-            e.Handled = !IsValidIpAddress(newText);
-        }
-        private bool IsValidIpAddress(string input)
-        {
-            return Regex.IsMatch(input, @"^(\d{1,3}\.){0,3}\d{0,3}$");
-        }
-
-        private void getPort_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            TextBox textBox = (TextBox)sender;
-            string newText = textBox.Text + e.Text;
-
-            // Allow only digits with a maximum length of 5
-            e.Handled = !IsValidPortNumber(newText);
-        }
-        private bool IsValidPortNumber(string input)
-        {
-            return Regex.IsMatch(input, @"^\d{0,5}$");
-        }
-
+        // CONNECTION ///////////////////////////////////////////////////////////////
+        // /////////////////////////
         private async void btnConnectToSrv_Click(object sender, RoutedEventArgs e)
         {
             string ipAddress = getIp.Text;
@@ -85,14 +42,14 @@ namespace NameManagementServer
                 switch (btnConnectToSrv.Content)
                 {
                     case "Connect":
-                        Dispatcher.Invoke(() => lblGetConnectStatus.Content = "Connecting...");
-                        await tcpClientManager.ConnectAsync(ipAddress, portNumber);
+                        lblGetConnectStatus.Content = "Connecting...";
+                        await ConnectToServerAsync(ipAddress, portNumber);
                         lblGetConnectStatus.Content = "Connected to the server";
                         btnConnectToSrv.Content = "Disconnect";
                         break;
                     case "Disconnect":
-                        Dispatcher.Invoke(() => lblGetConnectStatus.Content = "Disconnecting...");
-                        tcpClientManager.Disconnect();
+                        lblGetConnectStatus.Content = "Disconnecting...";
+                        DisconnectFromServer();
                         lblGetConnectStatus.Content = "Not connected";
                         btnConnectToSrv.Content = "Connect";
                         dataGrid.ItemsSource = null;
@@ -106,24 +63,164 @@ namespace NameManagementServer
                 MessageBox.Show("Server is offline" + Environment.NewLine + ex.Message);
                 lblGetConnectStatus.Content = "Not connected";
             }
-
-
-
         }
-        private void TcpClientManager_DataReceived(object sender, List<Record> records)
+        private async Task ConnectToServerAsync(string ipAddress, int portNumber)
         {
-            // Handle the server response here (e.g., update the UI with the received data)
+            await Task.Run(() =>
+            {
+                try
+                {
+                    tcpClient.Connect(ipAddress, portNumber);
+                    byte[] response = tcpClient.WriteLineAndGetReply("ReadAll", TimeSpan.FromSeconds(3)).Data;
+                    dataList = DeserializeRecords(response);
+                    Dispatcher.Invoke(() => dataGrid.ItemsSource = dataList);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Server is offline " + Environment.NewLine + ex);
+                }
+            });
+
+            ServerRespondTimer.Start();
+        }
+        private void DisconnectFromServer()
+        {
+            tcpClient?.Disconnect();
+            ServerRespondTimer.Stop();
+        }
+        private void ServerRespondTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                lblGetConnectStatus.Content = "Server has gone offline";
+                btnConnectToSrv.Content = "Connect";
+            });
+            DisconnectFromServer();
+            ServerRespondTimer.Stop();
+        }
+        // /////////////////////////
+        // CONNECTION ///////////////////////////////////////////////////////////////
+
+
+        // COMUNICATION /////////////////////////////////////////////////////////////
+        // /////////////////////////
+        private void TcpClient_DataReceived(object sender, Message e)
+        {
+            byte[] serverResponse = e.Data;
             ServerRespondTimer.Stop();
             ServerRespondTimer.Start();
 
-            // Use the Dispatcher to update the DataGrid on the UI thread
-            Dispatcher.Invoke(() =>
+            if (Encoding.UTF8.GetString(serverResponse).ToString() == "Connected")
             {
-                // Bind the records list to the DataGrid
-                dataGrid.ItemsSource = records;
+                return;
+            }
+            else if (Encoding.UTF8.GetString(serverResponse).ToString() == "Editreceived")
+            {
+                SendMessageToServer(SerializeRecords(dataList));
+            }
+            else
+            {
+                try
+                {
+                    dataList = DeserializeRecords(serverResponse);
+                    Dispatcher.Invoke(() => dataGrid.ItemsSource = dataList);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Deserialization error: " + ex.Message);
+                }
+            }
+        }
+        private void SendMessageToServer(byte[] message)
+        {
+            Task.Run(() =>
+            {
+                string messageStr = Encoding.UTF8.GetString(message);
+                try
+                {
+                    byte[] response = tcpClient.WriteLineAndGetReply(messageStr, TimeSpan.FromSeconds(5)).Data;
+                }
+                catch (Exception)
+                {
+                    return;
+                }
             });
         }
+        // COMUNICATION /////////////////////////////////////////////////////////////
+        // /////////////////////////
 
+
+
+
+        // HANDLE DATA /////////////////////////////////////////////////////////
+        // /////////////////////////
+        private void dataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            updateRowNumbers();
+            SendMessageToServer(Encoding.UTF8.GetBytes("Edit"));
+        }
+        private void updateRowNumbers()
+        {
+            for(int i = 0; i < dataList.Count; i++)
+            {
+                dataList[i].ID = (i+1).ToString();
+            }
+        }
+        private void dataGrid_ManipulationStarted(object sender, ManipulationStartedEventArgs e)
+        {
+            updateRowNumbers();
+        }
+        private void DeleteMenuItem_Click(object sender, RoutedEventArgs e)//RIGHT CLICK DELETE
+        {
+            if (dataGrid.SelectedItem is Record selectedRecord)
+            {
+                dataList.Remove(selectedRecord);
+                dataGrid.ItemsSource = null;
+                dataGrid.ItemsSource = dataList;
+                updateRowNumbers();
+                SendMessageToServer(Encoding.UTF8.GetBytes("Edit"));
+            }
+        }
+        private List<Record> DeserializeRecords(byte[] data)
+        {
+            string jsonString = Encoding.UTF8.GetString(data);
+            return JsonConvert.DeserializeObject<List<Record>>(jsonString);
+        }
+        private byte[] SerializeRecords(List<Record> UpdatedRecord)
+        {
+            string jsonData = JsonConvert.SerializeObject(UpdatedRecord);
+            return Encoding.UTF8.GetBytes(jsonData);
+        }
+        // /////////////////////////
+        // HANDLE DATA /////////////////////////////////////////////////////////
+
+
+
+
+        // HANDLE FORM INPUT /////////////////////////////////////////////////////////
+        // /////////////////////////
+        private void getIp_CheckTextInput(object sender, TextCompositionEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            string newText = textBox.Text + e.Text;
+            e.Handled = !IsValidIpAddress(newText);
+        }
+        private bool IsValidIpAddress(string input)
+        {
+            return Regex.IsMatch(input, @"^(\d{1,3}\.){0,3}\d{0,3}$");
+        }
+        private void getPort_CheckTextInput(object sender, TextCompositionEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            string newText = textBox.Text + e.Text;
+            e.Handled = !IsValidPortNumber(newText);
+        }
+        private bool IsValidPortNumber(string input)
+        {
+            return Regex.IsMatch(input, @"^\d{0,5}$");
+        }
+        // /////////////////////////
+        // HANDLE FORM INPUT /////////////////////////////////////////////////////////
 
 
     }

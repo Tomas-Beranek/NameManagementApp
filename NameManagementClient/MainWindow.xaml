@@ -41,13 +41,13 @@
             <Label Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="IP:"/>
             <TextBox x:Name="getIp" Grid.Column="1" Margin="10" Height="30" Text="127.0.0.1"
                      Style="{StaticResource TextBoxStyle}"
-                     PreviewTextInput="getIp_PreviewTextInput"/>
+                     PreviewTextInput="getIp_CheckTextInput"/>
 
             <!-- Port -->
             <Label Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Port:"/>
             <TextBox x:Name="getPort" Grid.Column="3" Margin="10" Height="30" Width="80" HorizontalAlignment="Left" Text="9000"
                      Style="{StaticResource TextBoxStyle}"
-                     PreviewTextInput="getPort_PreviewTextInput"/>
+                     PreviewTextInput="getPort_CheckTextInput"/>
             
         </Grid>
 
@@ -55,12 +55,22 @@
         <!-- ****************** -->
         <Grid Grid.Row="1">
             <!-- CSV edit -->
-            <DataGrid x:Name="dataGrid" ItemsSource="{Binding Path=Records}" AutoGenerateColumns="False">
+            <DataGrid x:Name="dataGrid" ItemsSource="{Binding Path=Records}" AutoGenerateColumns="False" RowEditEnding="dataGrid_RowEditEnding" ManipulationStarted="dataGrid_ManipulationStarted">
+                <DataGrid.Resources>
+                    <ContextMenu x:Key="RowContextMenu">
+                        <MenuItem Header="Delete" Click="DeleteMenuItem_Click"/>
+                    </ContextMenu>
+                </DataGrid.Resources>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Binding="{Binding ID}" />
+                    <DataGridTextColumn Header="ID" Binding="{Binding ID}" IsReadOnly="True"/>
                     <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" />
                     <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" />
                 </DataGrid.Columns>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="ContextMenu" Value="{StaticResource RowContextMenu}"/>
+                    </Style>
+                </DataGrid.RowStyle>
             </DataGrid>
 
         </Grid>

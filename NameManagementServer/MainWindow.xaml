@@ -43,13 +43,13 @@
             <Label Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="IP:"/>
             <TextBox x:Name="getIp" Text="127.0.0.1" Grid.Column="1" Margin="10" Height="30" 
                      Style="{StaticResource TextBoxStyle}"
-                     PreviewTextInput="getIp_PreviewTextInput"/>
+                     PreviewTextInput="getIp_CheckTextInput"/>
 
             <!-- Port -->
             <Label Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Port:"/>
             <TextBox x:Name="getPort" Text="9000" Grid.Column="3" Margin="10" Height="30" Width="80" HorizontalAlignment="Left" 
                      Style="{StaticResource TextBoxStyle}"
-                     PreviewTextInput="getPort_PreviewTextInput"/>
+                     PreviewTextInput="getPort_CheckTextInput"/>
             
         </Grid>
 
