@@ -109,10 +109,7 @@ namespace NameManagementServer
                         byte[] serverPingingBytes = Encoding.UTF8.GetBytes("ping");
                         client.GetStream().Write(serverPingingBytes, 0, serverPingingBytes.Length);
                     }
-                    catch
-                    {
-                        // Handle the exception (e.g., if the client is disconnected)
-                    }
+                    catch { }
                 }
             }
         }
@@ -134,7 +131,6 @@ namespace NameManagementServer
             string fileName = "names.csv";
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
 
-            // Check if the CSV file exists
             if (File.Exists(filePath))
             {
                 try
