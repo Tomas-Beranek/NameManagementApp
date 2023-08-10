@@ -161,6 +161,11 @@ namespace NameManagementServer
         }
         private void updateRowNumbers()
         {
+         // EDIT 10.08. 12:40
+         // Ted mi doslo, ze tady se melo spis resit jestli ma uzivatel unikatni cislo 
+         // a to cislo mu musi zustat i po odebrani jineho radku.
+         // Resil bych to tak, ze bych si vytvoril list<int>unikatnicisla tam by se nacetli ID
+         // s kazdym dalsimm updatem by se for loopem list prosel dokud by se nenaselo nasledujici unikatni cislo
             for(int i = 0; i < dataList.Count; i++)
             {
                 dataList[i].ID = (i+1).ToString();
