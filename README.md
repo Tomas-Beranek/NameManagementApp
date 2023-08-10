@@ -1,4 +1,4 @@
-# Klient-Server Aplikace pro Správu Seznamu Jmen
+# Klient-Server Aplikace pro správu seznamu jmen
 
 Jedná se o klient-server aplikaci pro správu seznamu jmen pomocí jazyka C#.
 
